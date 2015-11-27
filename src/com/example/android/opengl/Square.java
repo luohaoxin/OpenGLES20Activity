@@ -83,8 +83,6 @@ public class Square {
     	mColorShaderProgram.useProgram();
         mColorShaderProgram.setUniforms(mvpMatrix, color);
         mColorShaderProgram.setAttribs(COORDS_PER_VERTEX, vertexStride, vertexBuffer);
-        
-
         // Draw the square
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, drawOrder.length,

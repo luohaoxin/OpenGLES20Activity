@@ -35,7 +35,6 @@ import android.util.Log;
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 	private static final String TAG = "MyGLRenderer";
-	private Triangle mTriangle;
 	private Square mSquare;
 	private GLBitmap mBitmap;
 	public static Path mPath;
@@ -54,7 +53,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		mBitmap=new GLBitmap();
-		mTriangle = new Triangle();
 		mSquare = new Square();
 		mPath = new Path();
 	}
