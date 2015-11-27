@@ -20,38 +20,19 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import com.airHockey.android.programs.ColorShaderProgram;
+
 import android.opengl.GLES20;
 
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
 public class Square {
-
-    private final String vertexShaderCode =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
-            "uniform mat4 u_Matrix;" +
-            "attribute vec4 a_Position;" +
-            "void main() {" +
-            // The matrix must be included as a modifier of gl_Position.
-            // Note that the u_Matrix factor *must be first* in order
-            // for the matrix multiplication product to be correct.
-            "  gl_Position = u_Matrix * a_Position;" +
-            "}";
-
-    private final String fragmentShaderCode =
-            "precision mediump float;" +
-            "uniform vec4 u_Color;" +
-            "void main() {" +
-            "  gl_FragColor = u_Color;" +
-            "}";
-
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
-    private final int mProgram;
     private int mPositionHandle;
-    private int mColorHandle;
-    private int mMVPMatrixHandle;
+
+    private ColorShaderProgram mColorShaderProgram;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
@@ -71,6 +52,7 @@ public class Square {
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
     public Square() {
+    	mColorShaderProgram=new ColorShaderProgram(OpenGLES20Activity.mInstance);
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
         // (# of coordinate values * 4 bytes per float)
@@ -88,19 +70,7 @@ public class Square {
         drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder);
         drawListBuffer.position(0);
-
-        // prepare shaders and OpenGL program
-        int vertexShader = MyGLRenderer.loadShader(
-                GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(
-                GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
-
-        mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
-        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
-        GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
+            // create OpenGL program executables
     }
 
     /**
@@ -110,34 +80,10 @@ public class Square {
      * this shape.
      */
     public void draw(float[] mvpMatrix) {
-        // Add program to OpenGL environment
-        GLES20.glUseProgram(mProgram);
-
-        // get handle to vertex shader's a_Position member
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");
-
-        // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
-
-        // Prepare the triangle coordinate data
-        GLES20.glVertexAttribPointer(
-                mPositionHandle, COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT, false,
-                vertexStride, vertexBuffer);
-
-        // get handle to fragment shader's u_Color member
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "u_Color");
-
-        // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
-
-        // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_Matrix");
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-
-        // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-        MyGLRenderer.checkGlError("glUniformMatrix4fv");
+    	mColorShaderProgram.useProgram();
+        mColorShaderProgram.setUniforms(mvpMatrix, color);
+        mColorShaderProgram.setAttribs(COORDS_PER_VERTEX, vertexStride, vertexBuffer);
+        
 
         // Draw the square
         GLES20.glDrawElements(
