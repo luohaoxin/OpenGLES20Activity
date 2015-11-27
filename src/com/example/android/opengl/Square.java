@@ -30,13 +30,13 @@ public class Square {
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
             // the coordinates of the objects that use this vertex shader
-            "uniform mat4 uMVPMatrix;" +
+            "uniform mat4 u_Matrix;" +
             "attribute vec4 vPosition;" +
             "void main() {" +
             // The matrix must be included as a modifier of gl_Position.
-            // Note that the uMVPMatrix factor *must be first* in order
+            // Note that the u_Matrix factor *must be first* in order
             // for the matrix multiplication product to be correct.
-            "  gl_Position = uMVPMatrix * vPosition;" +
+            "  gl_Position = u_Matrix * vPosition;" +
             "}";
 
     private final String fragmentShaderCode =
@@ -132,7 +132,7 @@ public class Square {
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
         // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_Matrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation

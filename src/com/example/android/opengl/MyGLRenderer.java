@@ -37,6 +37,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 	private static final String TAG = "MyGLRenderer";
 	private Triangle mTriangle;
 	private Square mSquare;
+	private GLBitmap mBitmap;
 	public static Path mPath;
 	public static float aspectRatio=1;
 	// mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -52,7 +53,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
+		mBitmap=new GLBitmap();
 		mTriangle = new Triangle();
 		mSquare = new Square();
 		mPath = new Path();
@@ -60,11 +61,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 	@Override
 	public void onDrawFrame(GL10 unused) {
+		Log.i("luohaoxin", Thread.currentThread().toString());
 		long start=System.currentTimeMillis();
 		// Draw background color
 		// GLES20.glViewport(x, y, width, height);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
 		// Set the camera position (View matrix)
 		// Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3f, 0f, 0f, 0f, 0f, 1.0f,
 		// 0f);
@@ -85,7 +86,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 		// Draw triangle
 		mPath.draw(mProjectionMatrix);
+		mBitmap.draw(mProjectionMatrix);
 		Log.i("luohaoxin", ""+(System.currentTimeMillis()-start));
+		
 	}
 
 	@Override
