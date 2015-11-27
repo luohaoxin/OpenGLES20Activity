@@ -30,19 +30,19 @@ public class Triangle {
             // This matrix member variable provides a hook to manipulate
             // the coordinates of the objects that use this vertex shader
             "uniform mat4 u_Matrix;" +
-            "attribute vec4 vPosition;" +
+            "attribute vec4 a_Position;" +
             "void main() {" +
             // the matrix must be included as a modifier of gl_Position
             // Note that the u_Matrix factor *must be first* in order
             // for the matrix multiplication product to be correct.
-            "  gl_Position = u_Matrix * vPosition;" +
+            "  gl_Position = u_Matrix * a_Position;" +
             "}";
 
     private final String fragmentShaderCode =
             "precision mediump float;" +
-            "uniform vec4 vColor;" +
+            "uniform vec4 u_Color;" +
             "void main() {" +
-            "  gl_FragColor = vColor;" +
+            "  gl_FragColor = u_Color;" +
             "}";
 
     private final FloatBuffer vertexBuffer;
@@ -105,8 +105,8 @@ public class Triangle {
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
 
-        // get handle to vertex shader's vPosition member
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+        // get handle to vertex shader's a_Position member
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");
 
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
@@ -117,8 +117,8 @@ public class Triangle {
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
-        // get handle to fragment shader's vColor member
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+        // get handle to fragment shader's u_Color member
+        mColorHandle = GLES20.glGetUniformLocation(mProgram, "u_Color");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
