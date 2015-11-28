@@ -53,4 +53,33 @@ public class TextureHelper {
 		
 		return textureObjectIds[0];
 	}
+	public static int loadTexture(Context context, Bitmap bitmap) {
+		final int[] textureObjectIds = new int[1];
+		glGenTextures(1, textureObjectIds, 0);
+		
+		if (textureObjectIds[0] == 0) {
+			if (Util.DEBUG) {
+				Log.w(Util.LOG_TAG, "Could generate a new OpenGL texture object.");
+			}
+			return 0;
+		}
+		if (bitmap == null) {
+			if (Util.DEBUG) {
+				Log.w(Util.LOG_TAG, "bitmap could not be decoded");
+			}
+			glDeleteTextures(1, textureObjectIds, 0);
+			
+			return 0;
+		}
+		
+		glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
+		bitmap.recycle();
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		return textureObjectIds[0];
+	}
 }

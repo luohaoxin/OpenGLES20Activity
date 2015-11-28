@@ -114,7 +114,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		// aspectRatio, -1f, 1f);
 		// }
 		aspectRatio = (float) height / (float) width;
-		Matrix.orthoM(mProjectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+		Matrix.orthoM(mProjectionMatrix, 0, 0f, width,  height,0, -1f, 1f);
+//		Matrix.orthoM(mProjectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
 	}
 
 	/**

@@ -7,16 +7,27 @@ import com.airHockey.android.programs.TextureShaderProgram;
 import com.airHockey.android.util.TextureHelper;
 
 public class GLBitmap {
+//	private static final float[] VERTEX_DATA = {
+//			// Order of coordinates: X, Y, S, T
+//			
+//			// Triangle Fan
+//			0.0f,		0.0f,		0.5f,		0.5f,
+//			-.5f,		-.8f,		0.0f,		1f,
+//			0.5f,		-.8f,		1.0f,		1f,
+//			0.5f,		0.8f,		1.0f,		0f,
+//			-.5f,		0.8f,		0.0f,		0f,
+//			-.5f,		-.8f,		0.0f,		1f
+//	};
 	private static final float[] VERTEX_DATA = {
 			// Order of coordinates: X, Y, S, T
 			
 			// Triangle Fan
-			0.0f,		0.0f,		0.5f,		0.5f,
-			-.5f,		-.8f,		0.0f,		1f,
-			0.5f,		-.8f,		1.0f,		1f,
-			0.5f,		0.8f,		1.0f,		0f,
-			-.5f,		0.8f,		0.0f,		0f,
-			-.5f,		-.8f,		0.0f,		1f
+			50f,		50f,		0.5f,		0.5f,
+			0f,		100f,		0.0f,		1f,
+			100f,		100f,		1.0f,		1f,
+			100f,		0f,		1.0f,		0f,
+			0f,		0f,		0.0f,		0f,
+			0f,		100f,		0.0f,		1f
 	};
 	private TextureShaderProgram mTextureProgram;
 	private int mTexture;

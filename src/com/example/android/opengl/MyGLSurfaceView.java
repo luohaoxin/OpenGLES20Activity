@@ -54,8 +54,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
 		// and other input controls. In this case, you are only
 		// interested in events where the touch position changed.
 
-		float x = getGLx(e.getX());
-		float y = getGLy(e.getY());
+		float x = e.getX();
+		float y = e.getY();
 		Log.i("luohaoxin", "x:"+x+" y:"+y);
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_DOWN:
