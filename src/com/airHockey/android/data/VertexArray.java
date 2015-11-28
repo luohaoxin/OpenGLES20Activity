@@ -17,7 +17,17 @@ public class VertexArray {
 				.order(ByteOrder.nativeOrder())
 				.asFloatBuffer().put(vertexData);
 	}
-	
+	public VertexArray(int size) {
+		mFloatBuffer = ByteBuffer
+				.allocateDirect(size * BYTES_PER_FLOAT)
+				.order(ByteOrder.nativeOrder())
+				.asFloatBuffer();
+	}
+	public void putVertexData(float []vertexData)
+	{
+		mFloatBuffer.clear();
+		mFloatBuffer.put(vertexData);
+	}
 	public void setVertexAttribPointer(int dataOffset, int attributeLocation, int componentCount, int stride) {
 		mFloatBuffer.position(dataOffset);
 		glVertexAttribPointer(attributeLocation, componentCount, GL_FLOAT, false, stride, mFloatBuffer);
