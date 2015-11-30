@@ -16,6 +16,13 @@
 package com.example.android.opengl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Bitmap.Config;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,9 +37,13 @@ public class MyGLSurfaceView extends GLSurfaceView {
 	private final MyGLRenderer mRenderer;
 	float preX;
 	float preY;
-	int widthPixels;
-	int heightPixels;
+	public static int widthPixels;
+	public static int heightPixels;
 
+	private Bitmap mSignatureBitmap;
+	private Canvas mSignatureCanvas;
+    private Path path;  
+    Paint paint;
 	public MyGLSurfaceView(Context context) {
 		super(context);
 		widthPixels=getResources().getDisplayMetrics().widthPixels;
@@ -41,11 +52,24 @@ public class MyGLSurfaceView extends GLSurfaceView {
 		setEGLContextClientVersion(2);
 
 		// Set the Renderer for drawing on the GLSurfaceView
-		mRenderer = new MyGLRenderer();
+		mRenderer = new MyGLRenderer(context);
 		setRenderer(mRenderer);
 
 		// Render the view only when there is a change in the drawing data
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		
+		mSignatureBitmap= Bitmap.createBitmap(widthPixels,heightPixels, Config.ARGB_8888);
+		mSignatureCanvas = new Canvas();
+		mSignatureCanvas.setBitmap(mSignatureBitmap);
+		path=new Path();
+		paint=new Paint();
+		paint.setColor(Color.WHITE);
+		paint.setAntiAlias(true);
+		paint.setStyle(Paint.Style.STROKE);  
+        paint.setStrokeWidth(3);  
+        //反锯齿  
+        paint.setAntiAlias(true);  
+        paint.setDither(true); 
 	}
 
 	@Override
@@ -59,22 +83,24 @@ public class MyGLSurfaceView extends GLSurfaceView {
 		Log.i("luohaoxin", "x:"+x+" y:"+y);
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_DOWN:
+			path.moveTo(x, y);
+//			mSignatureCanvas.drawPath(path, paint);
 			MyGLRenderer.mPath.moveTo(x, y);
-//			MyGLRenderer.mPath.draw(MyGLRenderer.mProjectionMatrix);
 			requestRender();
 			preX = x;
 			preY = y;
 			break;
 		case MotionEvent.ACTION_MOVE:
+			path.quadTo(preX, preY, x, y);
+//			mSignatureCanvas.drawPath(path, paint);
 			MyGLRenderer.mPath.quadTo(preX, preY, x, y);
-//			MyGLRenderer.mPath.draw(MyGLRenderer.mProjectionMatrix);
 			requestRender();
 			preX = x;
 			preY = y;
 			break;
 		case MotionEvent.ACTION_UP:
+			path=new Path();
 			MyGLRenderer.mPath.quadTo(preX, preY, x, y);
-//			MyGLRenderer.mPath.draw(MyGLRenderer.mProjectionMatrix);
 			requestRender();
 			break;
 		}

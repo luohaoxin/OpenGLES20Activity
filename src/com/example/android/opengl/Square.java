@@ -15,6 +15,7 @@
  */
 package com.example.android.opengl;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -22,6 +23,7 @@ import java.nio.ShortBuffer;
 
 import com.airHockey.android.programs.ColorShaderProgram;
 
+import android.content.Context;
 import android.opengl.GLES20;
 
 /**
@@ -51,8 +53,8 @@ public class Square {
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
-    public Square() {
-    	mColorShaderProgram=new ColorShaderProgram(OpenGLES20Activity.mInstance);
+    public Square(Context context) {
+    	mColorShaderProgram=new ColorShaderProgram(context);
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
         // (# of coordinate values * 4 bytes per float)
@@ -61,7 +63,6 @@ public class Square {
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(squareCoords);
         vertexBuffer.position(0);
-
         // initialize byte buffer for the draw list
         ByteBuffer dlb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 2 bytes per short)

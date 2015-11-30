@@ -6,6 +6,7 @@ import static android.opengl.GLES20.glUniform4f;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -56,6 +57,9 @@ public class ColorShaderProgram extends ShaderPrograms {
 	}
 	public void setAttribs(int COORDS_PER_VERTEX,int vertexStride,FloatBuffer vertexBuffer)
 	{
+		
+		
+		
 		GLES20.glEnableVertexAttribArray(aPositionLocation);
 
         // Prepare the triangle coordinate data

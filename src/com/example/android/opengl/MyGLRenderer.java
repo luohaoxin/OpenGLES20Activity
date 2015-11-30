@@ -15,9 +15,16 @@
  */
 package com.example.android.opengl;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -46,15 +53,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 	private final float[] mRotationMatrix = new float[16];
 	private final float[] mDanweiMatrix = new float[] { 1f, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 1f };
 	private float mAngle;
-
+	private Context mContext;
+	
+	
+	
+	public MyGLRenderer(Context c) {
+		mContext=c;
+		
+	}
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
+		
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		mBitmap=new GLBitmap();
-		mSquare = new Square();
-		mPath = new Path();
+		mBitmap=new GLBitmap(mContext);
+		mBitmap.setBitmap(R.drawable.ic_launcher);
+		mSquare = new Square(mContext);
+		mPath = new Path(mContext);
 	}
 
 	@Override
@@ -64,6 +80,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		// Draw background color
 		// GLES20.glViewport(x, y, width, height);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//		GLES20.glFramebufferTexture2D(target, attachment, textarget, texture, level);
 		// Set the camera position (View matrix)
 		// Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3f, 0f, 0f, 0f, 0f, 1.0f,
 		// 0f);
@@ -71,7 +88,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		// // Calculate the projection and view transformation
 		// Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix,
 		// 0);
-
+		mBitmap.setPosition(0,0,1000,1000);
+		mBitmap.draw(mProjectionMatrix);
 		// Draw square
 		mSquare.draw(mProjectionMatrix);
 
@@ -84,7 +102,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 		// Draw triangle
 		mPath.draw(mProjectionMatrix);
-		mBitmap.draw(mProjectionMatrix);
 		Log.i("luohaoxin", ""+(System.currentTimeMillis()-start));
 		
 	}

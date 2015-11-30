@@ -57,6 +57,7 @@ public class TextureShaderProgram extends ShaderPrograms {
 	{
 		mVertexArray.putVertexData(VERTEX_DATA);
 		mVertexArray.setVertexAttribPointer(0, aPositionLocation, POSITION_COMPONENT_COUNT, STRIDE);
+		//why offset 2 ?
 		mVertexArray.setVertexAttribPointer(2, aTextureCoordinatesLocation, TEXTURE_COORDINATES_COMPONENT_COUNT, STRIDE);
 		
 	}
