@@ -138,6 +138,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 //			mSquare.draw(mProjectionMatrix);
 //			return;
 //		}
+		
 		mBitmap.setPosition(200,200, 500, 500);
 		mBitmap.draw(mProjectionMatrix);
 		// Draw square
