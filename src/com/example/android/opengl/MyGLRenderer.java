@@ -44,51 +44,101 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 	private static final String TAG = "MyGLRenderer";
 	private Square mSquare;
 	private GLBitmap mBitmap;
+	private GLBitmap mBitmap2;
 	public static Path mPath;
-	public static float aspectRatio=1;
+	public static float aspectRatio = 1;
 	// mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-	private final float[] mMVPMatrix = new float[16];
 	public static final float[] mProjectionMatrix = new float[16];
-	private final float[] mViewMatrix = new float[16];
-	private final float[] mRotationMatrix = new float[16];
 	private final float[] mDanweiMatrix = new float[] { 1f, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 1f };
 	private float mAngle;
 	private Context mContext;
-	
-	
-	
+
 	public MyGLRenderer(Context c) {
-		mContext=c;
-		
+		mContext = c;
+
 	}
+
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
-		
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		mBitmap=new GLBitmap(mContext);
+		mBitmap = new GLBitmap(mContext);
 		mBitmap.setBitmap(R.drawable.ic_launcher);
 		mSquare = new Square(mContext);
 		mPath = new Path(mContext);
+		intFrameBuffer();
+		mBitmap2=new GLBitmap(mContext);
+		mBitmap2.setTexture(bufferImg[0]);
+		mBitmap2.setPosition(300, 300, 300, 300);
 	}
 
+	int time = 0;
+	int[] fb = new int[1];
+	int[] rb = new int[1];
+	int[] bufferImg = new int[1];
+
+	public void intFrameBuffer()
+	{
+		//Texture
+		GLES20.glGenTextures(1, bufferImg, 0);
+		System.out.println("ORZCanvas.CreateBuffer()bufferimg:" + bufferImg[0]);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bufferImg[0]);
+		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA4, MyGLSurfaceView.widthPixels,
+				MyGLSurfaceView.heightPixels, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+		
+		//renderbuffer
+		GLES20.glGenRenderbuffers(1, rb, 0);
+		System.out.println("ORZCanvas.CreateBuffer()renderbuffer:" + rb[0]);
+		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, rb[0]);
+		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT, MyGLSurfaceView.widthPixels,
+				MyGLSurfaceView.heightPixels);
+		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, 0);
+		
+		//framebuffer
+		GLES20.glGenFramebuffers(1, fb, 0);
+		System.out.println("ORZCanvas.CreateBuffer()framebuffer:" + fb[0]);
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
+		
+		//attach to framebuffer
+		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER,
+				rb[0]);
+		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
+				bufferImg[0], 0);
+		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+		if (status == GLES20.GL_FRAMEBUFFER_COMPLETE) {
+
+		}
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+	}
 	@Override
 	public void onDrawFrame(GL10 unused) {
 		Log.i("luohaoxin", Thread.currentThread().toString());
-		long start=System.currentTimeMillis();
-		// Draw background color
-		// GLES20.glViewport(x, y, width, height);
+		long start = System.currentTimeMillis();
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-//		GLES20.glFramebufferTexture2D(target, attachment, textarget, texture, level);
-		// Set the camera position (View matrix)
-		// Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3f, 0f, 0f, 0f, 0f, 1.0f,
-		// 0f);
-		//
-		// // Calculate the projection and view transformation
-		// Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix,
-		// 0);
-		mBitmap.setPosition(0,0,1000,1000);
+		
+//		if(time>=20)
+//		{
+//			GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
+//			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//			mSquare.draw(mProjectionMatrix);
+//			GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+//			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bufferImg[0]);
+//			GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+//			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+//			mBitmap2.setTexture(bufferImg[0]);
+//			mBitmap2.draw(mProjectionMatrix);
+//			
+//			mSquare.draw(mProjectionMatrix);
+//			return;
+//		}
+		mBitmap.setPosition(200,200, 500, 500);
 		mBitmap.draw(mProjectionMatrix);
 		// Draw square
 		mSquare.draw(mProjectionMatrix);
@@ -102,8 +152,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 		// Draw triangle
 		mPath.draw(mProjectionMatrix);
-		Log.i("luohaoxin", ""+(System.currentTimeMillis()-start));
-		
+		Log.i("luohaoxin", "" + (System.currentTimeMillis() - start));
+		time++;
 	}
 
 	@Override
@@ -131,8 +181,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 		// aspectRatio, -1f, 1f);
 		// }
 		aspectRatio = (float) height / (float) width;
-		Matrix.orthoM(mProjectionMatrix, 0, 0f, width,  height,0, -1f, 1f);
-//		Matrix.orthoM(mProjectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+		Matrix.orthoM(mProjectionMatrix, 0, 0f, width, height, 0, -1f, 1f);
+		// Matrix.orthoM(mProjectionMatrix, 0, -1f, 1f, -aspectRatio,
+		// aspectRatio, -1f, 1f);
 	}
 
 	/**

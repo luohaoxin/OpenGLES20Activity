@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import com.airHockey.android.programs.ColorShaderProgram;
 
 import android.content.Context;
+import android.opengl.GLES10Ext;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 
 public class Path {
 	private final FloatBuffer vertexBuffer;
@@ -48,7 +50,6 @@ public class Path {
 				4 * 1500000);
 		// use the device hardware's native byte order
 		bb.order(ByteOrder.nativeOrder());
-
 		// create a floating point buffer from the ByteBuffer
 		vertexBuffer = bb.asFloatBuffer();
 	}
@@ -59,39 +60,13 @@ public class Path {
 	 * @param mvpMatrix
 	 *            - The Model View Project matrix in which to draw this shape.
 	 */
+
 	public void draw(float[] mvpMatrix) {
-//		int[] fb = new int[1];
-//		int[] rb = new int[1];
-//		int[] bufferImg = new int[1];
-//		GLES20.glGenFramebuffers(1, fb, 0);
-//		System.out.println("ORZCanvas.CreateBuffer()framebuffer:" + fb[0]);
-//		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
-//		GLES20.glGenRenderbuffers(1, rb, 0);
-//		System.out.println("ORZCanvas.CreateBuffer()renderbuffer:" + rb[0]);
-//		GLES20.glBindFramebuffer(GLES20.GL_RENDERBUFFER, rb[0]);
-//		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT, MyGLSurfaceView.widthPixels,
-//				MyGLSurfaceView.heightPixels);
-//		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER,
-//				rb[0]);
-//		GLES20.glGenTextures(1, bufferImg, 0);
-//		System.out.println("ORZCanvas.CreateBuffer()bufferimg:" + bufferImg[0]);
-//		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bufferImg[0]);
-//		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA4, MyGLSurfaceView.widthPixels,
-//				MyGLSurfaceView.heightPixels, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-//		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-//		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-//		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
-//				bufferImg[0], 0);
-//		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
 		
-		
-//		IntBuffer intBuffer;
-//		GLES20.glGenBuffers(1, intBuffer);;
-//		GLES20.glBindBuffer(target, buffer);
-		
+		// IntBuffer intBuffer;
+		// GLES20.glGenBuffers(1, intBuffer);;
+		// GLES20.glBindBuffer(target, buffer);
+
 		// Add program to OpenGL environment
 		// GLES20.glUseProgram(mProgram);
 		vertexBuffer.clear();
@@ -121,7 +96,7 @@ public class Path {
 	}
 
 	public void moveTo(float x, float y) {
-		 pathList.clear();
+		pathList.clear();
 		pathList.add(x);
 		pathList.add(y);
 	}

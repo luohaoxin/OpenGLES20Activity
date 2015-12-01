@@ -51,7 +51,10 @@ public class GLBitmap {
 		mBitmap=bitmap;
 		mTexture = TextureHelper.loadTexture(mContext, bitmap);
 	}
-
+	public void setTexture(int id)
+	{
+		mTexture=id;
+	}
 	public void setPosition(int left, int top, int right, int bottom) {
 		VERTEX_DATA[0] = (left + right) / 2f;
 		VERTEX_DATA[1] = (top + bottom) / 2f;
